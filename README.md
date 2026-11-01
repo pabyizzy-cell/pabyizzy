@@ -1,6 +1,6 @@
-# TikTok Stash — link-in-bio product page
+# pabyizzy — link-in-bio product page
 
-Free replacement for Linktree. Every product from @ttgadgetstash videos, numbered,
+Free replacement for Linktree. Every product from @pabyizzy videos, numbered,
 each button opening the product on TikTok Shop through the affiliate share link.
 
 ## Add a product
@@ -20,5 +20,5 @@ Other commands: `node tools/add.mjs --list` · `node tools/add.mjs --hide 7 --pu
 - Always use the share link copied from your own account, so the commission is credited to you.
 
 ## Click counts (optional)
-Make a free GoatCounter account, put its code (e.g. `ttgadgetstash`) in `"goatcounter"` in
+Make a free GoatCounter account, put its code (e.g. `pabyizzy`) in `"goatcounter"` in
 `products.json`. Each tap is then counted as `shop-<number>`.
