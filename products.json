@@ -1,0 +1,20 @@
+{
+  "profile": {
+    "name": "TikTok Stash",
+    "handle": "ttgadgetstash",
+    "bio": "Gadgets and must-haves I actually tested. Saw it in a video? Type the number below.",
+    "avatar": "img/avatar.jpg"
+  },
+  "goatcounter": "",
+  "products": [
+    {
+      "n": 1,
+      "name": "AI Voice Translator",
+      "blurb": "Pocket-size, 2-way translation in 165 languages",
+      "tag": "Gadgets",
+      "image": "img/1.jpg",
+      "link": "https://www.tiktok.com/t/ZP9yVt7ttwfdp-Az5oz/",
+      "added": "2026-11-01"
+    }
+  ]
+}

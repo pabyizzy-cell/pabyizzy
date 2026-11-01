@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TikTok Stash — Shop My Finds</title>
+<meta name="description" content="Every product from my TikTok videos, numbered. Tap to shop on TikTok Shop.">
+<meta property="og:title" content="TikTok Stash — Shop My Finds">
+<meta property="og:description" content="Every product from my TikTok videos, numbered. Tap to shop on TikTok Shop.">
+<meta property="og:image" content="img/avatar.jpg">
+<meta name="theme-color" content="#0f0f12">
+<link rel="icon" href="img/avatar.jpg">
+<style>
+  :root {
+    --bg: #0f0f12;
+    --card: #1a1a1f;
+    --line: #2a2a31;
+    --text: #f4f4f6;
+    --muted: #a0a0ab;
+    --accent: #ff6a1a;
+    --accent-ink: #1a0c03;
+    --radius: 16px;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+
+  header { text-align: center; padding: 32px 0 20px; }
+  .avatar {
+    width: 92px; height: 92px; border-radius: 50%; object-fit: cover;
+    border: 3px solid var(--accent); display: block; margin: 0 auto 12px;
+  }
+  h1 { font-size: 22px; margin: 0; letter-spacing: -0.01em; }
+  .handle { color: var(--muted); margin: 2px 0 10px; font-size: 15px; }
+  .handle a { color: inherit; text-decoration: none; }
+  .bio { margin: 0 auto; max-width: 420px; font-size: 15px; color: #d6d6dc; }
+
+  .controls {
+    position: sticky; top: 0; z-index: 5;
+    background: linear-gradient(var(--bg) 85%, transparent);
+    padding: 12px 0 14px;
+  }
+  .search {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 999px; padding: 0 16px; height: 50px;
+  }
+  .search:focus-within { border-color: var(--accent); }
+  .search svg { flex: none; color: var(--muted); }
+  .search input {
+    flex: 1; min-width: 0; background: none; border: 0; outline: 0;
+    color: var(--text); font-size: 17px; height: 100%;
+  }
+  .search input::placeholder { color: var(--muted); }
+  .clear {
+    background: none; border: 0; color: var(--muted); font-size: 22px;
+    padding: 4px; cursor: pointer; display: none;
+  }
+  .chips { display: flex; gap: 8px; overflow-x: auto; padding-top: 10px; scrollbar-width: none; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: none; border: 1px solid var(--line); background: var(--card); color: var(--text);
+    border-radius: 999px; padding: 7px 14px; font-size: 14px; cursor: pointer;
+  }
+  .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+
+  .grid {
+    display: grid; gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(156px, 1fr));
+    padding-bottom: 8px;
+  }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; display: flex; flex-direction: column;
+    color: inherit; text-decoration: none;
+    transition: transform .12s ease, border-color .12s ease;
+  }
+  .card:active { transform: scale(.98); }
+  .card.hit { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+  .media { position: relative; aspect-ratio: 1; background: #fff; }
+  .media img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .num {
+    position: absolute; top: 8px; left: 8px;
+    background: var(--accent); color: var(--accent-ink);
+    font-weight: 800; font-size: 15px; border-radius: 10px; padding: 3px 9px;
+  }
+  .new {
+    position: absolute; top: 8px; right: 8px; background: #111; color: #fff;
+    font-size: 11px; font-weight: 700; letter-spacing: .06em; border-radius: 8px; padding: 4px 7px;
+  }
+  .body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .name { font-weight: 700; font-size: 15px; line-height: 1.25; }
+  .blurb { color: var(--muted); font-size: 13px; line-height: 1.3; flex: 1; }
+  .btn {
+    margin-top: 8px; background: var(--accent); color: var(--accent-ink);
+    font-weight: 700; font-size: 14px; text-align: center; border-radius: 10px; padding: 10px 8px;
+  }
+
+  .empty { text-align: center; color: var(--muted); padding: 40px 0; display: none; }
+  footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 28px 0 36px; }
+  footer p { margin: 4px auto; max-width: 440px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img class="avatar" id="avatar" alt="">
+    <h1 id="name"></h1>
+    <p class="handle"><a id="handle" href="#"></a></p>
+    <p class="bio" id="bio"></p>
+  </header>
+
+  <div class="controls">
+    <label class="search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" inputmode="search" autocomplete="off" placeholder="Type the # from my video" aria-label="Search products">
+      <button class="clear" id="clear" type="button" aria-label="Clear search">×</button>
+    </label>
+    <div class="chips" id="chips" role="group" aria-label="Filter"></div>
+  </div>
+
+  <main class="grid" id="grid" aria-live="polite"></main>
+  <p class="empty" id="empty">No match. Double-check the number from the video.</p>
+
+  <footer>
+    <p>I earn a commission when you buy through these links, at no extra cost to you.</p>
+    <p>Every link opens the product on TikTok Shop.</p>
+  </footer>
+</div>
+
+<script>
+(async function () {
+  const $ = (id) => document.getElementById(id);
+  const data = await fetch('products.json', { cache: 'no-cache' }).then((r) => r.json());
+  const p = data.profile;
+
+  $('avatar').src = p.avatar;
+  $('name').textContent = p.name;
+  $('handle').textContent = '@' + p.handle;
+  $('handle').href = 'https://www.tiktok.com/@' + p.handle;
+  $('bio').textContent = p.bio;
+
+  const items = data.products.filter((x) => !x.hidden).sort((a, b) => b.n - a.n);
+  const NEW_DAYS = 7;
+  const now = Date.now();
+
+  // Optional click counting (free GoatCounter account; set "goatcounter" in products.json).
+  if (data.goatcounter) {
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = '//gc.zgo.at/count.js';
+    s.dataset.goatcounter = 'https://' + data.goatcounter + '.goatcounter.com/count';
+    document.head.appendChild(s);
+  }
+  const track = (item) => {
+    if (window.goatcounter && window.goatcounter.count) {
+      window.goatcounter.count({ path: 'shop-' + item.n, title: item.name, event: true });
+    }
+  };
+
+  // Tag chips only appear once there is more than one tag.
+  const tags = [...new Set(items.map((x) => x.tag).filter(Boolean))];
+  let activeTag = '';
+  if (tags.length > 1) {
+    ['All', ...tags].forEach((t) => {
+      const b = document.createElement('button');
+      b.className = 'chip';
+      b.type = 'button';
+      b.textContent = t;
+      b.setAttribute('aria-pressed', t === 'All');
+      b.onclick = () => {
+        activeTag = t === 'All' ? '' : t;
+        [...$('chips').children].forEach((c) => c.setAttribute('aria-pressed', c === b));
+        render();
+      };
+      $('chips').appendChild(b);
+    });
+  }
+
+  function card(item, hit) {
+    const a = document.createElement('a');
+    a.className = 'card' + (hit ? ' hit' : '');
+    a.href = item.link;
+    a.rel = 'noopener';
+    a.addEventListener('click', () => track(item));
+    const isNew = item.added && now - new Date(item.added).getTime() < NEW_DAYS * 864e5;
+    a.innerHTML =
+      '<div class="media"><img loading="lazy" alt=""><span class="num"></span>' +
+      (isNew ? '<span class="new">NEW</span>' : '') + '</div>' +
+      '<div class="body"><div class="name"></div><div class="blurb"></div>' +
+      '<div class="btn">Shop on TikTok →</div></div>';
+    a.querySelector('img').src = item.image;
+    a.querySelector('img').alt = item.name;
+    a.querySelector('.num').textContent = '#' + item.n;
+    a.querySelector('.name').textContent = item.name;
+    a.querySelector('.blurb').textContent = item.blurb || '';
+    return a;
+  }
+
+  function render() {
+    const raw = $('q').value.trim().toLowerCase();
+    const q = raw.replace(/^#/, '');
+    $('clear').style.display = raw ? 'block' : 'none';
+    let list = items.filter((x) => !activeTag || x.tag === activeTag);
+    let exact = null;
+    if (/^\d+$/.test(q)) {
+      exact = items.find((x) => String(x.n) === q) || null;
+      list = exact ? [exact] : list.filter((x) => String(x.n).startsWith(q));
+    } else if (q) {
+      list = list.filter((x) => (x.name + ' ' + (x.blurb || '') + ' ' + (x.tag || '')).toLowerCase().includes(q));
+    }
+    const grid = $('grid');
+    grid.replaceChildren(...list.map((x) => card(x, x === exact)));
+    $('empty').style.display = list.length ? 'none' : 'block';
+  }
+
+  $('q').addEventListener('input', render);
+  $('clear').onclick = () => { $('q').value = ''; render(); $('q').focus(); };
+
+  // Deep link: yoursite/?n=12 or yoursite/#12 opens straight to that product.
+  const pre = new URLSearchParams(location.search).get('n') || location.hash.replace('#', '');
+  if (pre) $('q').value = pre;
+  render();
+})();
+</script>
+</body>
+</html>
