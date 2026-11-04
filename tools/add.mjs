@@ -1,6 +1,6 @@
 // Add a TikTok Shop product to the link page.
 //
-//   node tools/add.mjs <tiktok share link> [--name "Short name"] [--blurb "One line"] [--tag "Gadgets"] [--push]
+//   node tools/add.mjs <tiktok share link> [--name "Short name"] [--blurb "One line"] [--tag "Gadgets"] [--n 6] [--push]
 //   node tools/add.mjs --hide 3        (take #3 off the page, keeps its number reserved)
 //   node tools/add.mjs --list
 //
@@ -62,7 +62,10 @@ const title = decodeURIComponent(meta('og:title').replace(/\+/g, ' '));
 const imageUrl = meta('og:image');
 if (!title || !imageUrl) throw new Error('Could not read the product title/photo from that link. Is it a product share link?');
 
-const n = Math.max(0, ...data.products.map((p) => p.n)) + 1;
+// --n <num> places it at a number a video already promised (e.g. "#6 at the link in bio"); default is the next one.
+const n = flag('--n') ? Number(flag('--n')) : Math.max(0, ...data.products.map((p) => p.n)) + 1;
+if (!Number.isInteger(n) || n < 1) throw new Error('--n must be a positive whole number');
+if (data.products.some((p) => p.n === n)) throw new Error(`#${n} is already taken`);
 const img = await fetch(imageUrl, { headers: { 'user-agent': UA } });
 if (!img.ok) throw new Error('Photo download failed: ' + img.status);
 writeFileSync(join(ROOT, 'img', `${n}.jpg`), Buffer.from(await img.arrayBuffer()));
